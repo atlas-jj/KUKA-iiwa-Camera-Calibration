@@ -9,7 +9,7 @@ This module was designed for our invited [live demo](https://webdocs.cs.ualberta
 + We are using AR Markers, the ROS package: **ar_track_alvar**, http://wiki.ros.org/ar_track_alvar
 + **No need to worry about how to make your KUKA iiwa robot working with ROS**. We make it possible.
   + If you plan to use KUKA iiwa Robot for a more complex and long duration task, you may need a standalone wrapper: our [**ROS_UDP_Wrapper**](https://github.com/atlas-jj/ROS-UDP-wrapper "ROS_UDP_Wrapper").
-  + But for this simple application, we just integrate UDP Comm inside.
+  + But for this **simple application**, we just integrate UDP Comm inside.
 + That's it.
 
 # How to use the code
