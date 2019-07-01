@@ -10,6 +10,7 @@ This module was designed for our invited [live demo](https://webdocs.cs.ualberta
 + **No need to worry about how to make your KUKA iiwa robot working with ROS**. We make it possible.
   + If you plan to use KUKA iiwa Robot for a more complex and long duration task, you may need a standalone wrapper: our [**ROS_UDP_Wrapper**](https://github.com/atlas-jj/ROS-UDP-wrapper "ROS_UDP_Wrapper").
   + But for this **simple application**, we just integrate UDP Comm inside.
++ Control points are stored in result.txt. Read the points and use any transformation solver to solve.
 + That's it.
 
 # How to use the code
