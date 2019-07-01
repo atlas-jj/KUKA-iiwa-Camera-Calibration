@@ -34,9 +34,15 @@
 using boost::asio::ip::udp;
 
 enum { max_length = 1024 };
-
-
 using namespace std;
+
+boost::asio::io_service io_service;
+
+udp::socket s(io_service, udp::endpoint(udp::v4(), 0));
+
+udp::resolver resolver(io_service);
+udp::resolver::query query(udp::v4(), UDP_SERVER_IP , PORT);
+udp::resolver::iterator udp_iterator = resolver.resolve(query);
 
 std::vector<cv::Point3d> pts_marker;
 std::vector<cv::Point3d> pts_robot;
@@ -182,7 +188,7 @@ void resolvRobotPosition()
     std::cout << "msg received:  "+inStr<<endl;
     if (packageValid(inStr))//get the robot position
     {
-        int endIndex=str.find("@l@");
+        int endIndex=inStr.find("@l@");
         string strTemp=inStr.substr(0,endIndex);
         //split string to doubles
         //cout<<strTemp<<endl;
@@ -209,14 +215,7 @@ void resolvRobotPosition()
 
 int main(int argc, char **argv )
 {
-  boost::asio::io_service io_service;
-
-    udp::socket s(io_service, udp::endpoint(udp::v4(), 0));
-
-    udp::resolver resolver(io_service);
-    udp::resolver::query query(udp::v4(), UDP_SERVER_IP , PORT);
-    udp::resolver::iterator iterator = resolver.resolve(query);
-
+    
     markerValid=false;
     //initialize the ROS system and become a node.
     ros::init(argc, argv, "chris_calibrator");
@@ -263,7 +262,7 @@ int main(int argc, char **argv )
             strcpy(myArray, closeConnectionCmd.c_str());
 	    std::cout << "close robot connection command:  "<<closeConnectionCmd<<endl;
 
-	    s.send_to(boost::asio::buffer(myArray, myArrayLength), *iterator);
+	    s.send_to(boost::asio::buffer(myArray, myArrayLength), *udp_iterator);
 	  }
 
 	  if(str.find("init") != std::string::npos)
@@ -274,7 +273,7 @@ int main(int argc, char **argv )
             strcpy(myArray, Cmd.c_str());
 	    std::cout << "initialize command:  "<<Cmd<<endl;
 
-	    s.send_to(boost::asio::buffer(myArray, myArrayLength), *iterator);
+	    s.send_to(boost::asio::buffer(myArray, myArrayLength), *udp_iterator);
 	  }
 
     if(str.find("move") != std::string::npos)
@@ -293,7 +292,7 @@ int main(int argc, char **argv )
       char myArray[myArrayLength];//as 1 char space for null is not required
       strcpy(myArray, Cmd.c_str());
       std::cout << "command: "+ str <<Cmd<<endl;
-      s.send_to(boost::asio::buffer(myArray, myArrayLength), *iterator);
+      s.send_to(boost::asio::buffer(myArray, myArrayLength), *udp_iterator);
       std::cout << "move position command sent:  "+ str <<Cmd<<endl;
       //wait for reply
 
@@ -318,7 +317,7 @@ int main(int argc, char **argv )
       strcpy(myArray, getRobotCartPositionCmd.c_str());
 	    std::cout << "get robot position:  "<<getRobotCartPositionCmd<<endl;
 
-	    s.send_to(boost::asio::buffer(myArray, myArrayLength), *iterator);
+	    s.send_to(boost::asio::buffer(myArray, myArrayLength), *udp_iterator);
 
 	    std::cout<<"get robot position cmd sent!"<<endl;
 	    //receive position from robot
@@ -355,7 +354,7 @@ int main(int argc, char **argv )
 
 	      corrsPts.data.push_back(pts_robot[m].x);
 	      corrsPts.data.push_back(pts_robot[m].y);
-0	      corrsPts.data.push_back(pts_robot[m].z);
+	      corrsPts.data.push_back(pts_robot[m].z);
 	      corrsPts.data.push_back(pose_robot[m][0]);
 	      corrsPts.data.push_back(pose_robot[m][1]);
 	      corrsPts.data.push_back(pose_robot[m][2]);

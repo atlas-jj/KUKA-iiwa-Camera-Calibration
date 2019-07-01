@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 2.8.3)
 project(iiwa_kinect_calibration)
 
-find_package(catkin REQUIRED COMPONENTS roscpp geometry_msgs cv_bridge image_transport)
+find_package(catkin REQUIRED COMPONENTS roscpp geometry_msgs cv_bridge image_transport ar_track_alvar_msgs)
 
 find_package(OpenCV REQUIRED)
 
